@@ -16,6 +16,7 @@ router.post(
 	currentUserRouter,
 	async (req: Request, res: Response) => {
 		const { payload: cipherText } = req.body;
+		const {publicKey} = req.body;
 
 		if (!cipherText) {
 			const error = new BadRequestError(
@@ -24,13 +25,11 @@ router.post(
 
 			return res.send(error.serializeErrors()).status(error.statusCode);
 		}
-		const currentUser = await User.findOne({
-			phone: req.currentUser?.phone,
-		});
+		const user = await User.findOne({publicKey:publicKey});
 
-		if (!currentUser) {
+		if (!user) {
 			const error = new NotAuthorizedError(
-				'not authorised. Need to sign in to access this route'
+				'Not authorised. Need to sign in to access this route'
 			);
 			return res.status(error.statusCode).send(error.serializeErrors());
 		}
@@ -38,7 +37,7 @@ router.post(
 		try {
 			plainText = crypto.privateDecrypt(
 				{
-					key: Buffer.from(currentUser?.privateKey!),
+					key: Buffer.from(user?.privateKey!),
 					padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
 					oaepHash: 'sha512',
 					passphrase: process.env.PASS_PHRASE!,

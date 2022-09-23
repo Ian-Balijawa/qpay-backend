@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post('/', requireAuth, async (req: Request, res: Response) => {
 	const payload = JSON.stringify(req.body);
+
 	if (!payload) {
 		const error = new BadRequestError(
 			'Must provide valid plain text data to be encrypted'

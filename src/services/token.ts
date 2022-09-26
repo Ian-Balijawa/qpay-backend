@@ -3,10 +3,11 @@ import { IUser } from "../Interfaces/User";
 import jwt from "jsonwebtoken";
 import { Document } from "mongoose";
 import { QPEY_KEYS } from "../config/keys";
+import { __PROD__ } from '../config/__prod__';
 
 export const createToken = (user: Document<IUser>): string => {
   return jwt.sign({ id: user._id }, QPEY_KEYS.JWT_KEY as jwt.Secret, {
-    expiresIn: "1d",
+    expiresIn: __PROD__? "1d": "4d",
   });
 };
 

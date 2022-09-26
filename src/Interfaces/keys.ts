@@ -15,13 +15,4 @@ export interface MOMO {
     PRI_KEY?: string;
     SEC_KEY?: string;
   };
-  REMITANCES: {
-    PRI_KEY?: string;
-    SEC_KEY?: string;
-  };
-
-  COLLECTION_WIDGET: {
-    PRI_KEY?: string;
-    SEC_KEY?: string;
-  };
 }

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { QPEY_KEYS, MOMO_KEYS } from './config/keys';
-const { COLLECTIONS, COLLECTION_WIDGET, REMITANCES } = MOMO_KEYS;
+const { COLLECTIONS} = MOMO_KEYS;
 const {
 	SECRET_KEY,
 	JWT_KEY,
@@ -15,18 +15,6 @@ const start = async (): Promise<void> | never => {
 	if (!COLLECTIONS?.PRI_KEY || !COLLECTIONS?.SEC_KEY) {
 		console.error(
 			'COLLECTIONS PRIMARY_KEY and SECONDARY_KEY Must be defined'
-		);
-		process.exit(1);
-	}
-	if (!COLLECTION_WIDGET?.PRI_KEY || !COLLECTION_WIDGET?.SEC_KEY) {
-		console.error(
-			'COLLECTION_WIDGET PRIMARY_KEY and SECONDARY_KEY Must be defined'
-		);
-		process.exit(1);
-	}
-	if (!REMITANCES?.PRI_KEY || !REMITANCES?.SEC_KEY) {
-		console.error(
-			'REMITANCES PRIMARY_KEY and SECONDARY_KEY Must be defined'
 		);
 		process.exit(1);
 	}

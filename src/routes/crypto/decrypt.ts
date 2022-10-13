@@ -1,22 +1,20 @@
-import express, { Response, Request } from 'express';
+import express, { Request, Response } from 'express';
+
 import { BadRequestError } from '../../errors';
-import { AuthenticatedMiddleware as requireAuth } from '../../middlewares/require-auth';
+import { InternalServerError } from '../../errors/internal-server-error';
 import { User } from '../../models/User';
 import crypto from 'crypto';
-import { currentUserRouter } from '../auth/current-user';
-import { NotAuthorizedError } from '../../errors/not-authorized-error';
-import { CustomError } from '../../errors/custom-error';
-import { InternalServerError } from '../../errors/internal-server-error';
+import { AuthenticatedMiddleware as requireAuth } from '../../middlewares/require-auth';
 
 const router = express.Router();
 
 router.post(
 	'/',
 	requireAuth,
-	currentUserRouter,
 	async (req: Request, res: Response) => {
 		const { payload: cipherText } = req.body;
-		const {publicKey} = req.body;
+		const { _id } = req.body;
+
 
 		if (!cipherText) {
 			const error = new BadRequestError(
@@ -25,11 +23,13 @@ router.post(
 
 			return res.send(error.serializeErrors()).status(error.statusCode);
 		}
-		const user = await User.findOne({publicKey:publicKey});
+		const user = await User.findOne({ _id });
+
+		console.log(user)
 
 		if (!user) {
-			const error = new NotAuthorizedError(
-				'Not authorised. Need to sign in to access this route'
+			const error = new BadRequestError(
+				'No such Key'
 			);
 			return res.status(error.statusCode).send(error.serializeErrors());
 		}
@@ -62,3 +62,4 @@ router.post(
 );
 
 export { router as decryptionRouter };
+

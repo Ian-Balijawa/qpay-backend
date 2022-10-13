@@ -9,7 +9,7 @@
 	"scripts": {
 		"postinstall": "tsc",
 		"start": "node ./build/index.js",
-		"watch-ts": "tsc -w",
+		"build": "tsc -w",
 		"dev": "nodemon build/index.js"
 	},
 	"engines": {

@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import { QPEY_KEYS, } from './config/keys';
 import { app } from './app';
-import { QPEY_KEYS, MOMO_KEYS } from './config/keys';
-const { COLLECTIONS} = MOMO_KEYS;
+import mongoose from 'mongoose';
+
 const {
 	SECRET_KEY,
 	JWT_KEY,
@@ -12,12 +12,6 @@ const {
 } = QPEY_KEYS;
 
 const start = async (): Promise<void> | never => {
-	if (!COLLECTIONS?.PRI_KEY || !COLLECTIONS?.SEC_KEY) {
-		console.error(
-			'COLLECTIONS PRIMARY_KEY and SECONDARY_KEY Must be defined'
-		);
-		process.exit(1);
-	}
 	if (!JWT_KEY) {
 		console.error('JWT_KEY must be defined!');
 		process.exit(1);

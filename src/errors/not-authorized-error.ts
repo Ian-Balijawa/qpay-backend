@@ -1,4 +1,4 @@
-import { CustomError, ErrorFields } from './custom-error';
+import { CustomError, ErrorField } from './custom-error';
 
 export class NotAuthorizedError extends CustomError {
 	statusCode = 403;
@@ -9,7 +9,7 @@ export class NotAuthorizedError extends CustomError {
 		Object.setPrototypeOf(this, NotAuthorizedError.prototype);
 	}
 
-	serializeErrors(): ErrorFields[] {
-		return [{ message: this.message, field: '' }];
+	serializeErrors(): ErrorField {
+		return { message: this.message };
 	}
 }

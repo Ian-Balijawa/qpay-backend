@@ -1,10 +1,11 @@
-import express, { Response, Request } from 'express';
+import express, { Request, Response } from 'express';
+
 import { BadRequestError } from '../../errors';
+import { InternalServerError } from '../../errors/internal-server-error';
+import { NotAuthorizedError } from '../../errors/not-authorized-error';
+import { User } from '../../models/User';
 import crypto from 'crypto';
 import { AuthenticatedMiddleware as requireAuth } from '../../middlewares/require-auth';
-import { User } from '../../models/User';
-import { NotAuthorizedError } from '../../errors/not-authorized-error';
-import { InternalServerError } from '../../errors/internal-server-error';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 	const user = await User.findOne({ phone: req.currentUser?.phone });
 
 	if (!user) {
-		const error = new NotAuthorizedError(
+		const error = new BadRequestError(
 			'Need to be signed in to access this route'
 		);
 		return res.status(error.statusCode).send(error.serializeErrors());

@@ -1,15 +1,16 @@
 import express, { Request, Response } from 'express';
+
+import { BadRequestError } from '../../errors';
+import { PasswordManager } from '../../services/password';
+import { User } from '../../models/User';
 import { body } from 'express-validator';
 import { generateKeyPairRSA } from '../../core/key-pair';
-import { BadRequestError } from '../../errors';
 import { validateRequest } from '../../middlewares';
-import { User } from '../../models/User';
-import { PasswordManager } from '../../services/password';
 
 const router = express.Router();
 
 router.post(
-	'/signup',
+	'/',
 	[
 		body('name')
 			.isLength({ min: 3, max: 25 })

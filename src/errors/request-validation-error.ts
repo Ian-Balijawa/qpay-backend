@@ -2,7 +2,6 @@ import { CustomError, ErrorField } from './custom-error';
 
 import { ValidationError } from "express-validator";
 
-// TODO: implememt this ValidationError type specific to (joi)
 export class RequestValidationError extends CustomError {
     statusCode = 400;
 

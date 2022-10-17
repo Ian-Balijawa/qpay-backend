@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
+
 import { CustomError } from '../errors/custom-error';
 
 export const errorHandler = (
@@ -12,11 +13,11 @@ export const errorHandler = (
 	}
 
 	return res.status(500).send({
-		errors: [
-			{
-				message:
-					'Something went terribly wrong. Our Engineers are working hard to fix it',
-			},
-		],
+		errors:
+		{
+			message:
+				'Something went terribly wrong. Our Engineers are working hard to fix it',
+		},
+
 	});
 };

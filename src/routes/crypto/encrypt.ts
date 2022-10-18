@@ -2,10 +2,9 @@ import express, { Request, Response } from 'express';
 
 import { BadRequestError } from '../../errors';
 import { InternalServerError } from '../../errors/internal-server-error';
-import { NotAuthorizedError } from '../../errors/not-authorized-error';
 import { User } from '../../models/User';
 import crypto from 'crypto';
-import { AuthenticatedMiddleware as requireAuth } from '../../middlewares/require-auth';
+import { requireAuth } from '../../middlewares/require-auth';
 
 const router = express.Router();
 
@@ -49,3 +48,4 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 });
 
 export { router as encryptionRouter };
+

@@ -4,7 +4,7 @@ import { BadRequestError } from '../../errors';
 import { InternalServerError } from '../../errors/internal-server-error';
 import { User } from '../../models/User';
 import crypto from 'crypto';
-import { AuthenticatedMiddleware as requireAuth } from '../../middlewares/require-auth';
+import { requireAuth } from '../../middlewares/require-auth';
 
 const router = express.Router();
 
@@ -25,8 +25,6 @@ router.post(
 		}
 		const user = await User.findOne({ _id });
 
-		console.log(user)
-
 		if (!user) {
 			const error = new BadRequestError(
 				'No such Key'
@@ -44,20 +42,19 @@ router.post(
 				},
 				Buffer.from(cipherText, 'base64')
 			);
+			console.log(JSON.parse(plainText.toString('utf8')).amount);
 			return res
 				.status(200)
 				.send(JSON.parse(plainText?.toString('utf8')));
 		} catch (error) {
-			console.error(`Error during decryption: ${error}`);
+			return res
+				.status(500)
+				.send(
+					new InternalServerError(
+						'Error During Decryption'
+					).serializeErrors()
+				);
 		}
-
-		return res
-			.status(200)
-			.send(
-				new InternalServerError(
-					'Error During Decryption'
-				).serializeErrors()
-			);
 	}
 );
 

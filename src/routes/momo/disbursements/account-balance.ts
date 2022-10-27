@@ -1,12 +1,10 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import express, { Request, Response } from 'express'
 
 const router = express.Router()
 
 router.get('/', async (req: Request, res: Response) => {
-	var axios = require('axios')
-
-	var config: AxiosRequestConfig<any> = {
+	const config: AxiosRequestConfig<any> = {
 		method: 'get',
 		url: 'https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/account/balance',
 		headers: {

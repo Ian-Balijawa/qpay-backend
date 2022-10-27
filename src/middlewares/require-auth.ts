@@ -12,7 +12,7 @@ export interface UserPayload {
 declare global {
 	namespace Express {
 		interface Request {
-			currentUser?: UserPayload
+			user?: UserPayload
 		}
 	}
 }
@@ -34,18 +34,18 @@ async function requireAuth(req: Request, _res: Response, next: NextFunction): Pr
 		const payload: UserPayload | jwt.JsonWebTokenError = (await verifyToken(accessToken)) as unknown as UserPayload
 
 		if (payload instanceof jwt.JsonWebTokenError) {
-			return next(new BadRequestError('Unauthorised!!'))
+			next(new BadRequestError('Unauthorised. Missing or invalid AuthToken').serializeErrors())
 		}
 
 		if (!payload) {
-			return next(new BadRequestError('Unauthorised. Missing or invalid AuthToken').serializeErrors())
+			next(new BadRequestError('Unauthorised. Missing or invalid AuthToken').serializeErrors())
 		}
 
-		req.currentUser = payload
+		req.user = payload
 
-		return next()
+		next()
 	} catch (error) {
-		return next(new BadRequestError('Unauthorised!'))
+		next(new BadRequestError('Unauthorised!'))
 	}
 }
 

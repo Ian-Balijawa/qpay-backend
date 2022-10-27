@@ -1,12 +1,12 @@
-import { CustomError, ErrorField } from './custom-error';
+import { CustomError, ErrorField } from './custom-error'
 
 export class InternalServerError extends CustomError {
-	statusCode = 403;
+	statusCode = 500
 
 	constructor(public message: string) {
-		super(message);
+		super(message)
 
-		Object.setPrototypeOf(this, InternalServerError.prototype);
+		Object.setPrototypeOf(this, InternalServerError.prototype)
 	}
 
 	serializeErrors(): ErrorField {

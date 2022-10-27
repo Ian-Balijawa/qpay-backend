@@ -1,6 +1,6 @@
-import { Types } from 'mongoose';
+import { Types } from 'mongoose'
 
-export interface Token extends Object {
-  id: Types.ObjectId;
-  expiresIn: number;
+export interface IToken extends Object {
+	id: Types.ObjectId
+	expiresIn: number
 }

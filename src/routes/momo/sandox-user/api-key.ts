@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express'
 const router = express.Router()
 
 router.post('/', async (req: Request, res: Response) => {
-	var config: AxiosRequestConfig<any> = {
+	const config: AxiosRequestConfig<any> = {
 		method: 'post',
 		url: 'https://sandbox.momodeveloper.mtn.com/v1_0/apiuser/ee0128a6-9625-4049-819a-dd34f50bfec0/apikey',
 		headers: {

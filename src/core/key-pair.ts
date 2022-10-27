@@ -1,6 +1,6 @@
+import { CIPHER } from './constants';
 import { generateKeyPair } from 'crypto';
 import { promisify } from 'util';
-import { CIPHER } from './constants';
 
 const generateKeyPairAsync = promisify(generateKeyPair);
 

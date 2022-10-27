@@ -1,44 +1,39 @@
-import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
-import { validateRequest } from '../../middlewares';
-import { BadRequestError } from '../../errors';
-import { User } from '../../models/User';
-import { PasswordManager } from '../../services/password';
+import express, { Request, Response } from 'express'
 
-const router = express.Router();
+import { BadRequestError } from '../../errors'
+import { PasswordManager } from '../../services/password'
+import { User } from '../../models/User'
+import { body } from 'express-validator'
+import { validateRequest } from '../../middlewares'
+
+const router = express.Router()
 
 router.post(
 	'/',
-	[
-		body('phone').isMobilePhone('en-UG').withMessage('Phone must be valid'),
-		body('password').notEmpty().withMessage('You must supply a password'),
-	],
+	[body('phone').isMobilePhone('en-UG').withMessage('Phone must be valid'), body('password').notEmpty().withMessage('You must supply a password')],
 	validateRequest,
 	async (req: Request, res: Response): Promise<any> => {
-		const { phone, password } = req.body;
+		const { phone, password } = req.body
 
-		const user = await User.findOne({ phone });
+		const user = await User.findOne({ phone })
 
 		if (!user) {
-			const error = new BadRequestError('Invalid credentials');
-			return res.status(error.statusCode).send(error.serializeErrors());
+			const error = new BadRequestError('Invalid credentials')
+			return res.status(error.statusCode).send(error.serializeErrors())
 		}
 
-		const passwordsDoMatch = await PasswordManager.compare(
-			user.password,
-			password
-		);
+		const passwordsDoMatch = await PasswordManager.compare(user.password, password)
 
 		if (!passwordsDoMatch) {
-			const error = new BadRequestError('Invalid credentials');
-			return res.status(error.statusCode).send(error.serializeErrors());
+			const error = new BadRequestError('Invalid credentials')
+			return res.status(error.statusCode).send(error.serializeErrors())
 		}
 
-		const userJWT = User.generateAuthToken(user);
-		req.session.jwt = userJWT;
+		const userJWT = User.createAuthToken(user)
+		req.session.jwt = userJWT
 
-		return res.status(200).send({ existingUser: user, authToken: userJWT });
+		return res.status(200).send({ existingUser: user, authToken: userJWT })
 	}
-);
+)
 
-export { router as signinRouter };
+export { router as signinRouter }

@@ -3,8 +3,8 @@ import express, { Request, Response } from 'express'
 
 const router = express.Router()
 
-router.get('/', async (req: Request, res: Response) => {
-	var config: AxiosRequestConfig<any> = {
+router.get('/', async (_req: Request, _res: Response) => {
+	const config: AxiosRequestConfig<any> = {
 		method: 'get',
 		url: 'https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/accountholder/msisdn/0243656043/active',
 		headers: {

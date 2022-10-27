@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const router = Router()
 
-router.get('/', requireAuth, async (req: Request, res: Response) => {
+router.get('/', requireAuth, async (_req: Request, res: Response) => {
 	const uuid = uuidv4()
 
 	res.status(200).send(uuid)

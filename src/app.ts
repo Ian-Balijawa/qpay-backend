@@ -5,11 +5,13 @@ import express, { Express, Request, Response } from 'express'
 
 import { NotFoundError } from './errors'
 import { accountBalanceRouter } from './routes/momo/collections/account-balance'
+import { balanceRouter } from './routes/balance'
 import { checkIfUserIsRegisteredAndActiveRouter } from './routes/momo/collections/check-if-user-is-registered-and-active'
 import cookieSession from 'cookie-session'
 import cors from 'cors'
 import { currentUserRouter } from './routes/auth/current-user'
 import { decryptionRouter } from './routes/crypto/decrypt'
+import { depositRouter } from './routes/deposit'
 import { encryptionRouter } from './routes/crypto/encrypt'
 import { errorHandler } from './middlewares/error-handler'
 import { getRequestToPayTransactionStatusRouter } from './routes/momo/collections/get-request-to-pay-transaction-status'
@@ -22,6 +24,7 @@ import { signinRouter } from './routes/auth/signin'
 import { signoutRouter } from './routes/auth/signout'
 import { signupRouter } from './routes/auth/signup'
 import { uuidRouter } from './routes/momo/uuid'
+import { withdrawRouter } from './routes/withdraw'
 
 const app: Express = express()
 
@@ -54,6 +57,9 @@ app.use(`${apiPrefixEndPoint}/request-to-pay`, requestToPayRouter)
 app.use(`${apiPrefixEndPoint}/account-balance`, accountBalanceRouter)
 app.use(`${apiPrefixEndPoint}/get-request-to-pay-transaction-status`, getRequestToPayTransactionStatusRouter)
 app.use(`${apiPrefixEndPoint}/check-if-user-is-registered-and-active`, checkIfUserIsRegisteredAndActiveRouter)
+app.use(`${apiPrefixEndPoint}/balance`, balanceRouter)
+app.use(`${apiPrefixEndPoint}/deposit`, depositRouter)
+app.use(`${apiPrefixEndPoint}/withdraw`, withdrawRouter)
 
 app.all('*', async (req: Request, res: Response) => {
 	const error = new NotFoundError('Route to resource not Found')

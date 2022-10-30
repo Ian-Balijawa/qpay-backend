@@ -17,6 +17,11 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 
 		return res.send(error.serializeErrors()).status(error.statusCode)
 	}
+	if (!_id) {
+		const error = new BadRequestError('Must provide merchant _id: (_id) field')
+
+		return res.send(error.serializeErrors()).status(error.statusCode)
+	}
 	const user = await User.findOne({ _id })
 
 	if (!user) {
@@ -34,35 +39,35 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
 			Buffer.from(cipherText, 'base64')
 		)
 		const obj = JSON.parse(plainText.toString('utf8'))
-		const { reciever: recieverID, amount } = obj
+		const { reciever: vendorID, amount } = obj
 
-		const recipient = await User.findOne({ _id: recieverID })
-		const senderInfo = await User.findOne({ _id: '634913fa0bae7b980f9df924' })
-		console.log('req.user?.id: ', req.user?.id)
-		if (!senderInfo) {
+		const vendor = await User.findOne({ _id: vendorID })
+		const me = await User.findOne({ _id: req.user?.id })
+
+		if (!me) {
 			const error = new NotFoundError('No such user found with given sender details')
 			return res.status(error.statusCode).send(error.serializeErrors())
 		}
-		if (!recieverID) {
+		if (!vendorID) {
 			const error = new BadRequestError('Invalid reciever Details')
 			return res.status(error.statusCode).send(error.serializeErrors())
 		}
 
-		if (!recieverID) {
+		if (!vendorID) {
 			const error = new NotFoundError('No such user found with given reciever details')
 			return res.status(error.statusCode).send(error.serializeErrors())
 		}
-		if (senderInfo.amount < amount) {
+		if (me.amount < amount) {
 			const error = new BadRequestError('Insufficient Funds')
 
 			return res.status(error.statusCode).send(error.serializeErrors())
 		}
-		if (recipient && senderInfo) {
-			recipient.amount += amount
-			senderInfo.amount -= amount
+		if (vendor && me) {
+			vendor.amount += amount
+			me.amount -= amount
 
-			await recipient.save()
-			await senderInfo.save()
+			await vendor.save()
+			await me.save()
 		}
 		return res.status(200).send('Recieved')
 	} catch (error) {

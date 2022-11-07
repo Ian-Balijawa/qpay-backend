@@ -1,52 +1,49 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express';
 
-import { BadRequestError } from '../errors'
-import jwt from 'jsonwebtoken'
-import { verifyToken } from '../services/token'
+import { BadRequestError } from '../errors';
+import { verifyToken } from '../services/token';
 
 export interface UserPayload {
-	id: string
-	phone: string
+  id: string;
+  phone: string;
 }
 
 declare global {
-	namespace Express {
-		interface Request {
-			user?: UserPayload
-		}
-	}
+  namespace Express {
+    interface Request {
+      user?: UserPayload;
+    }
+  }
 }
 declare module 'express-session' {
-	interface SessionData {
-		jwt?: string
-	}
+  interface SessionData {
+    jwt?: string;
+  }
 }
 
-async function requireAuth(req: Request, _res: Response, next: NextFunction): Promise<Response | void> {
-	const bearer = req.headers.authorization
+export const requireAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const bearer = req.headers.authorization;
 
-	if (!bearer || !bearer.startsWith('Bearer ')) {
-		return next(new BadRequestError('Unauthorised!!!'))
-	}
+  if (!bearer || !bearer.startsWith('Bearer ')) {
+    return next(new BadRequestError('Unauthorised!!!'));
+  }
 
-	const accessToken: string = bearer.split('Bearer ')[1].trim()
-	try {
-		const payload: UserPayload | jwt.JsonWebTokenError = (await verifyToken(accessToken)) as unknown as UserPayload
+  const token: string = bearer.split('Bearer ')[1].trim();
 
-		if (payload instanceof jwt.JsonWebTokenError) {
-			next(new BadRequestError('Unauthorised. Missing or invalid AuthToken').serializeErrors())
-		}
+  if (!token) {
+    throw new BadRequestError('Not authorized');
+  }
 
-		if (!payload) {
-			next(new BadRequestError('Unauthorised. Missing or invalid AuthToken').serializeErrors())
-		}
+  try {
+    const payload = (await verifyToken(token)) as unknown as UserPayload;
+    req.user = payload;
+  } catch (err) {
+    throw new BadRequestError('Not authorized');
+  }
 
-		req.user = payload
-
-		next()
-	} catch (error) {
-		next(new BadRequestError('Unauthorised!'))
-	}
-}
-
-export { requireAuth }
+  next();
+};

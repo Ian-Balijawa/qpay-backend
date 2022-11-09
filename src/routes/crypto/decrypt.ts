@@ -67,13 +67,11 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
       await customer.save();
     }
 
-    res
-      .status(200)
-      .send({
-        message: 'Transaction Successful',
-        amount,
-        balance: customer.amount
-      });
+    res.status(200).send({
+      message: 'Transaction Successful',
+      amount,
+      balance: customer.amount
+    });
 
     // return res.status(200).send('Recieved');
   } catch (error) {

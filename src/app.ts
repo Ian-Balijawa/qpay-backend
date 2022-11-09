@@ -23,7 +23,6 @@ import { requestToPayRouter } from './routes/momo/collections/request-to-pay';
 import { signinRouter } from './routes/auth/signin';
 import { signoutRouter } from './routes/auth/signout';
 import { signupRouter } from './routes/auth/signup';
-import { userRouter } from './routes/get-user';
 import { uuidRouter } from './routes/momo/uuid';
 import { withdrawRouter } from './routes/withdraw';
 
@@ -67,7 +66,6 @@ app.use(
 app.use(`${apiPrefixEndPoint}/balance`, balanceRouter);
 app.use(`${apiPrefixEndPoint}/deposit`, depositRouter);
 app.use(`${apiPrefixEndPoint}/withdraw`, withdrawRouter);
-app.use(`${apiPrefixEndPoint}/me`, userRouter);
 
 app.all('*', async (req: Request, res: Response) => {
   const error = new NotFoundError('Route to resource not Found');

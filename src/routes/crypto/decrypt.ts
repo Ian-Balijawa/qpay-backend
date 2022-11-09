@@ -66,7 +66,14 @@ router.post('/', requireAuth, async (req: Request, res: Response) => {
       await merchant.save();
       await customer.save();
     }
-    return res.status(200).send('Recieved');
+
+    res.status(200).send({
+      message: 'Transaction Successful',
+      amount,
+      balance: customer.amount
+    });
+
+    // return res.status(200).send('Recieved');
   } catch (error) {
     console.log('ERROR: ', error);
     return res

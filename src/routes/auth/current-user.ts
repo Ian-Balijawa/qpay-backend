@@ -1,11 +1,14 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response } from 'express';
 
-import { requireAuth } from '../../middlewares/require-auth'
+import { User } from '../../models/User';
+import { requireAuth } from '../../middlewares/require-auth';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', requireAuth, (req: Request, res: Response) => {
-	return res.status(200).send(req.user || null)
-})
+router.get('/', requireAuth, async (req: Request, res: Response) => {
+  const me = await User.findOne({ _id: req.user?.id });
 
-export { router as currentUserRouter }
+  return res.status(200).send({ me });
+});
+
+export { router as currentUserRouter };
